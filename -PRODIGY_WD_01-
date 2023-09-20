@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        #stopwatch {
+            font-size: 2em;
+            text-align: center;
+        }
+
+        #controls {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="stopwatch">00:00:00</div>
+    <div id="controls">
+        <button id="start">Start</button>
+        <button id="stop">Stop</button>
+        <button id="reset">Reset</button>
+    </div>
+
+    <script>
+        let startTime = 0;
+        let intervalId = null;
+
+        const stopwatchDisplay = document.getElementById("stopwatch");
+        const startButton = document.getElementById("start");
+        const stopButton = document.getElementById("stop");
+        const resetButton = document.getElementById("reset");
+
+        function updateStopwatch() {
+            const currentTime = Date.now() - startTime;
+            const hours = Math.floor(currentTime / 3600000);
+            const minutes = Math.floor((currentTime % 3600000) / 60000);
+            const seconds = Math.floor((currentTime % 60000) / 1000);
+            const milliseconds = Math.floor(currentTime % 1000);
+
+            stopwatchDisplay.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(milliseconds).padStart(3, '0')}`;
+        }
+
+        startButton.addEventListener("click", () => {
+            if (intervalId === null) {
+                startTime = Date.now() - (startTime ? startTime : 0);
+                intervalId = setInterval(updateStopwatch, 10);
+            }
+        });
+
+        stopButton.addEventListener("click", () => {
+            if (intervalId !== null) {
+                clearInterval(intervalId);
+                intervalId = null;
+            }
+        });
+
+        resetButton.addEventListener("click", () => {
+            clearInterval(intervalId);
+            intervalId = null;
+            startTime = 0;
+            stopwatchDisplay.textContent = "00:00:00.000";
+        });
+    </script>
+</body>
+</html>
